@@ -4,7 +4,7 @@ def calc_spectrum(
         data: np.ndarray,
         coords: np.ndarray,
         scale: float,
-        width: int = 5,
+        dr: int = 5,
         )-> np.ndarray:
     """
     Calculate SAED spectrum.
@@ -28,8 +28,8 @@ def calc_spectrum(
     result = np.zeros((int(coords.max()) - start, 2))
     for i in range(result.shape[0]):
         r = start + i
-        min_r = r - int(width/2)
-        max_r = min_r + width
+        min_r = r - int(dr/2)
+        max_r = min_r + dr
         cur = np.zeros(coords.shape)
         cur[(coords<max_r)*(coords>min_r)] = 1
         # Average intensity at current distance
@@ -69,7 +69,7 @@ def optimize_position(
             print(f'Start SAED calculation for (x,y) = {(i,j)}')
             x = np.arange(-i, data.shape[0] - i)
             y = np.arange(-j, data.shape[1] - j)
-            xs, ys = np.meshgrid(x, y, sparse=True, indexing = 'ij')
+            xs, ys = np.meshgrid(x, y, sparse=True, indexing = 'xy')
             zs = np.sqrt(xs**2 + ys**2)
             print(zs.shape)
             cur_res = calc_spectrum(data = data, coords = zs, dr = dr, scale = scale)
